@@ -6,8 +6,11 @@ Creates a ready-to-use scratch environment for the chosen language, and opens VS
 
 ### Usage
 ```
-scratchy <language>
+scratchy <opts> <language>
 ```
+
+#### Opts
+- `--no-code` - Don't open VS code
 
 #### Supported languages
 - Go (`go`)

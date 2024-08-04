@@ -1,6 +1,8 @@
 package main
 
 import (
+	"errors"
+	"flag"
 	"fmt"
 	"os"
 	"os/exec"
@@ -16,39 +18,54 @@ var validGenerators = map[string]lang.ScratchEnvGenerator{
 }
 
 func main() {
-	if len(os.Args) < 2 {
-		fmt.Println("no language provided")
+	var noCode bool
+
+	flag.BoolVar(&noCode, "no-code", false, "don't open VS code")
+	flag.Parse()
+
+	args := flag.Args()
+
+	if err := run(noCode, args); err != nil {
+		fmt.Println(err)
 		os.Exit(1)
 	}
+}
 
-	arg := strings.TrimSpace(os.Args[1])
+func run(noCode bool, args []string) error {
+	langs := make([]string, 0, len(validGenerators))
+	for k := range validGenerators {
+		langs = append(langs, k)
+	}
+
+	if len(args) < 1 {
+		return fmt.Errorf("no language provided (valid langs: %s)", strings.Join(langs, ", "))
+	}
+
+	arg := strings.TrimSpace(args[0])
 	lang := strings.ToLower(arg)
 	gen, ok := validGenerators[lang]
 
 	if !ok {
-		langs := make([]string, 0, len(validGenerators))
-		for k := range validGenerators {
-			langs = append(langs, k)
-		}
-		fmt.Printf("invalid lang %q (valid langs: %s)\n", arg, strings.Join(langs, ", "))
-		os.Exit(1)
+		return fmt.Errorf("invalid lang %q (valid langs: %s)", arg, strings.Join(langs, ", "))
 	}
 
 	tmpDir, err := os.MkdirTemp("", "scratch-env-"+lang+"-*")
 	if err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return err
 	}
 
 	if err := gen.Generate(tmpDir); err != nil {
-		fmt.Println(err)
-		os.Exit(1)
+		return err
 	}
 
 	mainPath := path.Join(tmpDir, gen.MainFile())
 
 	fmt.Printf("New %s env created at\n\n\t%s\n\n", lang, tmpDir)
-	if err := exec.Command("code", "-g", mainPath, tmpDir).Run(); err != nil {
-		fmt.Println("Couldn't open VS Code")
+	if !noCode {
+		if err := exec.Command("code", "-g", mainPath, tmpDir).Run(); err != nil {
+			return errors.New("couldn't open VS Code")
+		}
 	}
+
+	return nil
 }
