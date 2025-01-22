@@ -15,3 +15,5 @@ scratchy <opts> <language>
 #### Supported languages
 - Go (`go`)
 - Typescript (`ts`)
+- Bash scripts (`sh`)
+- JSON data (`json`)
