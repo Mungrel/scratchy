@@ -13,9 +13,10 @@ import (
 )
 
 var validGenerators = map[string]lang.ScratchEnvGenerator{
-	"go": lang.GoGenerator{},
-	"ts": lang.TypescriptGenerator{},
-	"sh": lang.ShGenerator{},
+	"go":   lang.GoGenerator{},
+	"ts":   lang.TypescriptGenerator{},
+	"sh":   lang.ShGenerator{},
+	"json": lang.JSONGenerator{},
 }
 
 func main() {
