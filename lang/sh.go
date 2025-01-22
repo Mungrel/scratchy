@@ -4,7 +4,6 @@ type ShGenerator struct{}
 
 var _ ScratchEnvGenerator = ShGenerator{}
 
-// Generate implements ScratchEnvGenerator.
 func (s ShGenerator) Generate(dir string) error {
 	if err := create(dir, "run.sh",
 		`#!/bin/bash
@@ -21,7 +20,6 @@ echo "hello"
 	return nil
 }
 
-// MainFile implements ScratchEnvGenerator.
 func (s ShGenerator) MainFile() string {
 	return "run.sh"
 }
