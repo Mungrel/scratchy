@@ -8,11 +8,22 @@ func (g GoGenerator) Generate(dir string) error {
 	if err := create(dir, "main.go",
 		`package main
 
-import "fmt"
+import (
+	"fmt"
+	"os"
+)
 	
 func main() {
-	fmt.Println("hey")
-}`,
+	if err := run(os.Args[1:]); err != nil {
+		fmt.Println(err)
+		os.Exit(1)
+	}
+}
+	
+func run(args []string) error {
+	return nil
+}
+`,
 	); err != nil {
 		return err
 	}

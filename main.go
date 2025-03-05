@@ -20,20 +20,20 @@ var validGenerators = map[string]lang.ScratchEnvGenerator{
 }
 
 func main() {
-	var noCode bool
+	var editor string
 
-	flag.BoolVar(&noCode, "no-code", false, "don't open VS code")
+	flag.StringVar(&editor, "editor", "vs-code", "editor to open (none, vs-code (default), cursor)")
 	flag.Parse()
 
 	args := flag.Args()
 
-	if err := run(noCode, args); err != nil {
+	if err := run(editor, args); err != nil {
 		fmt.Println(err)
 		os.Exit(1)
 	}
 }
 
-func run(noCode bool, args []string) error {
+func run(editor string, args []string) error {
 	langs := make([]string, 0, len(validGenerators))
 	for k := range validGenerators {
 		langs = append(langs, k)
@@ -63,10 +63,17 @@ func run(noCode bool, args []string) error {
 	mainPath := path.Join(tmpDir, gen.MainFile())
 
 	fmt.Printf("New %s env created at\n\n\t%s\n\n", lang, tmpDir)
-	if !noCode {
+	switch editor {
+	case "vs-code":
 		if err := exec.Command("code", "-g", mainPath, tmpDir).Run(); err != nil {
 			return errors.New("couldn't open VS Code")
 		}
+	case "cursor":
+		if err := exec.Command("cursor", "-g", mainPath, tmpDir).Run(); err != nil {
+			return errors.New("couldn't open cursor")
+		}
+	case "none":
+		return nil
 	}
 
 	return nil
