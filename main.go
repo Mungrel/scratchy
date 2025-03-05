@@ -74,6 +74,8 @@ func run(editor string, args []string) error {
 		}
 	case "none":
 		return nil
+	default:
+		return fmt.Errorf("invalid editor %q", editor)
 	}
 
 	return nil
