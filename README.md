@@ -10,7 +10,10 @@ scratchy <opts> <language>
 ```
 
 #### Opts
-- `--no-code` - Don't open VS code
+- `--editor` - Which editor to open
+    - `none` - Don't open any editor
+    - `vs-code` - VS Code
+    - `cursor` - Cursor
 
 #### Supported languages
 - Go (`go`)
