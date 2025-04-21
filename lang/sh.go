@@ -7,6 +7,7 @@ var _ ScratchEnvGenerator = ShGenerator{}
 func (s ShGenerator) Generate(dir string) error {
 	if err := create(dir, "run.sh",
 		`#!/bin/bash
+set -euo pipefail
 	
 echo "hello"
 `); err != nil {
