@@ -22,7 +22,7 @@ var validGenerators = map[string]lang.ScratchEnvGenerator{
 func main() {
 	var editor string
 
-	flag.StringVar(&editor, "editor", "vs-code", "editor to open (none, vs-code (default), cursor)")
+	flag.StringVar(&editor, "editor", "cursor", "editor to open (none, vs-code, cursor (default))")
 	flag.Parse()
 
 	args := flag.Args()
